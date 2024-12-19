@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.melo.employee_reimbursement_system.Repository.RoleRepository;
 import com.melo.employee_reimbursement_system.Repository.UsersRepository;
-import com.melo.employee_reimbursement_system.dto.LoginRequest;
+import com.melo.employee_reimbursement_system.dto.LoginRequestDTO;
+import com.melo.employee_reimbursement_system.dto.RegisterRequestDTO;
+import com.melo.employee_reimbursement_system.dto.UserDTO;
 import com.melo.employee_reimbursement_system.model.AuthenticationResponse;
 import com.melo.employee_reimbursement_system.model.Role;
 import com.melo.employee_reimbursement_system.model.Users;
@@ -31,7 +33,7 @@ public class AuthService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(Users request) {
+    public AuthenticationResponse register(RegisterRequestDTO request) {
         Users user = new Users();
         user.setFirstname(request.getFirstname());
         user.setLastname(request.getLastname());
@@ -48,10 +50,18 @@ public class AuthService {
 
         String token = jwtService.generateToken(user);
 
-        return new AuthenticationResponse(token);
+        UserDTO userDTO = new UserDTO(
+            user.getUserId(), 
+            user.getUsername(), 
+            user.getRole(), 
+            user.getFirstname(), 
+            user.getLastname()
+        );
+
+        return new AuthenticationResponse(token, userDTO);
     }
 
-    public AuthenticationResponse authenticate(LoginRequest loginRequest) {
+    public AuthenticationResponse authenticate(LoginRequestDTO loginRequest) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(), 
@@ -68,6 +78,14 @@ public class AuthService {
 
         String token = jwtService.generateToken(user);
 
-        return new AuthenticationResponse(token);
+        UserDTO userDTO = new UserDTO(
+            user.getUserId(), 
+            user.getUsername(), 
+            user.getRole(), 
+            user.getFirstname(), 
+            user.getLastname()
+        );
+
+        return new AuthenticationResponse(token, userDTO);
     }
 }
