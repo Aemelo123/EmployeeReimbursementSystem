@@ -7,9 +7,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.melo.employee_reimbursement_system.Repository.RoleRepository;
 import com.melo.employee_reimbursement_system.Repository.UsersRepository;
-import com.melo.employee_reimbursement_system.model.Role;
 import com.melo.employee_reimbursement_system.model.Users;
 
 @Service
@@ -17,22 +15,6 @@ public class UsersService {
 
     @Autowired
     private UsersRepository usersRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    public Users createUser(Users user){
-        if (user.getRole() == null) {
-            Role employeeRole = roleRepository.findByRoleName("Employee")
-                    .orElseThrow(() -> new RuntimeException("Default 'Employee' role not found"));
-            user.setRole(employeeRole);
-        }
-
-        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(12));
-        user.setPassword(hashedPassword);
-
-        return usersRepository.save(user);
-    }
 
     public boolean authenticateUser(String username, String enteredPassword) {
         Optional<Users> user = usersRepository.findByUsername(username);
