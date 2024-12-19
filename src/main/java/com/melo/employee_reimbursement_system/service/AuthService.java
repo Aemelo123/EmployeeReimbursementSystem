@@ -10,7 +10,6 @@ import com.melo.employee_reimbursement_system.Repository.RoleRepository;
 import com.melo.employee_reimbursement_system.Repository.UsersRepository;
 import com.melo.employee_reimbursement_system.dto.LoginRequestDTO;
 import com.melo.employee_reimbursement_system.dto.RegisterRequestDTO;
-import com.melo.employee_reimbursement_system.dto.UserDTO;
 import com.melo.employee_reimbursement_system.model.AuthenticationResponse;
 import com.melo.employee_reimbursement_system.model.Role;
 import com.melo.employee_reimbursement_system.model.Users;
@@ -50,15 +49,7 @@ public class AuthService {
 
         String token = jwtService.generateToken(user);
 
-        UserDTO userDTO = new UserDTO(
-            user.getUserId(), 
-            user.getUsername(), 
-            user.getRole(), 
-            user.getFirstname(), 
-            user.getLastname()
-        );
-
-        return new AuthenticationResponse(token, userDTO);
+        return new AuthenticationResponse(token);
     }
 
     public AuthenticationResponse authenticate(LoginRequestDTO loginRequest) {
@@ -78,14 +69,7 @@ public class AuthService {
 
         String token = jwtService.generateToken(user);
 
-        UserDTO userDTO = new UserDTO(
-            user.getUserId(), 
-            user.getUsername(), 
-            user.getRole(), 
-            user.getFirstname(), 
-            user.getLastname()
-        );
 
-        return new AuthenticationResponse(token, userDTO);
+        return new AuthenticationResponse(token);
     }
 }
